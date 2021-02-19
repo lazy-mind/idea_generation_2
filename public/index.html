@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#000000" />
+		<meta name="description" content="Web site created using create-react-app" />
+		<link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+		<link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+
+		<title>Idea Generation</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+
+		<!-- <link href="popup.css" media="all" rel="stylesheet" type="text/css" /> -->
+		<link href="jquery.orgchart.css" media="all" rel="stylesheet" type="text/css" />
+		<!-- <link href="popup.css" media="all" rel="stylesheet" type="text/css" /> -->
+
+		<!-- Remember to include jQuery :) -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+
+		<!-- jQuery Modal -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+		<!-- <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script> -->
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css">
+
+		<title>Idea Generation</title>
+	</head>
+
+
+	<body>
+		<noscript>You need to enable JavaScript to run this app.</noscript>
+
+		<div id="root" style="position: fixed; z-index: 1;"></div>
+
+
+		<button id="initialize_node_btn" style="display: none;"></button>
+		<button id="cap_screen_btn" style="display: none;"></button>
+		<!-- <button id="cap_screen_btn" style="display: none;" onclick="screenshot()"></button> -->
+
+		<h1 align="center" id='index_loading_hint' style="display: visible; margin-left: auto; margin-right: auto;">Loading ... </h1>
+
+		<div id="orgChartContainer" style="visibility: hidden;">
+			<p id='idea_instruction' style="text-align: center; font-size: 1.5rem; padding: 50px 200px 50px 200px;">
+			</p>
+
+
+		    <div id="orgChart"></div>
+
+
+		    <!-- Modal for creating new idea -->
+		    <div id="input_modal" class="modal" style="text-align: center; ">
+		        <p id="idea_input_hint" style="margin: 5px; font-weight: bold;">Enter your idea</p>
+		        <p id="idea_input_hint_more" style="margin: 0px; color: red"></p>
+
+		        <span id="idea_input_text" name="idea_text" class="textarea" role="textbox" contenteditable>
+		        </span>
+
+		        <div id="create_new_node_div" style="display: inline-flex;">
+		            <a id="create_new_node" value="-1" style="color: black; text-decoration: none; padding: 5px; margin-top: 5px; border: 1px solid transparent; border-color: #e7e7e7; border-radius: 10px; font-weight: bold;" href="#" rel="modal:close">Add</a>
+		        </div>
+		        <a style="display: none;" id="close_modal_link" href="#close-modal" rel="modal:close">Close window</a>
+		    </div>
+		</div>
+
+		<div style="display: none;">
+		    <button id="output_request_btn">ouput the information</button>
+		</div>
+
+		<div style="display: none;">
+		    <button id="send_api_request">Cloud</button>
+		</div>
+
+
+		<div id="consoleOutput" style="display: none;">
+		</div>
+
+		<script type="text/javascript" src="jquery-1.11.1.min.js"></script>
+		<script type="text/javascript" src="jquery.orgchart.js"></script>
+		<script type="text/javascript" src="html2canvas.js"></script>
+		<script type="text/javascript">
+			window.onload=passwordCheck;
+			function passwordCheck(){
+
+				do{
+				    var password = prompt("Please enter the invitation code");
+				}while(password == null || password == "" || password.length<=8);
+
+				sessionStorage.setItem("invitation_code", password)
+				// console.log('invitation code is: ', sessionStorage.getItem("invitation_code"))
+
+			    // var password = prompt("Please enter the invitation code");
+			    // if (password.length==8){
+			    // } else{
+			    //     while(password.length!==8){
+			    //         password = prompt("Please enter the invitation code");
+			    //     }
+			    // }
+			}
+
+		    window.onbeforeunload = function() {
+		        return "Please enter the invitation code";
+		    }
+
+
+		    // var seedword = sessionStorage.getItem("seedword")
+		    // console.log("!!!!", seedword)
+		    
+		    var testData = [
+		        {id: 1, name: "placeholder", parent: 0, time_stamp: (new Date()).getTime()},
+		    ];
+
+		    sessionStorage.setItem("latest_node_position", 'idea_content_'+0);
+		    $(function(){
+		        org_chart = $('#orgChart').orgChart({
+		            data: testData,
+		            showControls: true,
+		            allowEdit: false,
+		            onAddNode: function(node){ 
+		                log('Created new node on node '+node.data.id);
+		                org_chart.newNode(node.data.id); 
+		            },
+		            onDeleteNode: function(node){
+		                log('Deleted node '+node.data.id);
+		                org_chart.deleteNode(node.data.id); 
+		            },
+		            onClickNode: function(node){
+		                log('Clicked node '+node.data.id);
+		            }
+
+		        });
+		    });
+
+		    // function initialization(){
+		    // 	var seedword = sessionStorage.getItem("seedword")
+			   //  console.log("!!!!", seedword)
+
+			   //  var testData = [
+			   //      {id: 1, name: seedword, parent: 0, time_stamp: (new Date()).getTime()},
+			   //  ];
+			   //  $(function(){
+			   //      org_chart = $('#orgChart').orgChart({
+			   //          data: testData,
+			   //          showControls: true,
+			   //          allowEdit: false,
+			   //          onAddNode: function(node){ 
+			   //              log('Created new node on node '+node.data.id);
+			   //              org_chart.newNode(node.data.id); 
+			   //          },
+			   //          onDeleteNode: function(node){
+			   //              log('Deleted node '+node.data.id);
+			   //              org_chart.deleteNode(node.data.id); 
+			   //          },
+			   //          onClickNode: function(node){
+			   //              log('Clicked node '+node.data.id);
+			   //          }
+
+			   //      });
+			   //  });
+		    // }
+
+		    // $("#create_new_node_div" ).click(function(e) {
+		    // 	initialization()
+		    // });
+
+		    // just for example purpose
+		    function log(text){
+		        $('#consoleOutput').append('<p>'+text+'</p>')
+		    }
+
+		 //    function screenshot(){
+			//     html2canvas(document.querySelector("#orgChartContainer")).then(function(canvas) {
+
+			//     document.body.appendChild(canvas);
+			//     download(canvas, 'myimage.png');
+			//    });
+			//   }
+
+			// function download(canvas, filename) {
+			//   /// create an "off-screen" anchor tag
+			//   var lnk = document.createElement('a'), e;
+
+			//   /// the key here is to set the download attribute of the a tag
+			//   lnk.download = filename;
+
+			//   /// convert canvas content to data-uri for link. When download
+			//   /// attribute is set the content pointed to by link will be
+			//   /// pushed as "download" in HTML5 capable browsers
+			//   lnk.href = canvas.toDataURL("image/png;base64");
+
+			//   /// create a "fake" click-event to trigger the download
+			//   if (document.createEvent) {
+			//     e = document.createEvent("MouseEvents");
+			//     e.initMouseEvent("click", true, true, window,
+			//                      0, 0, 0, 0, 0, false, false, false,
+			//                      false, 0, null);
+
+			//     lnk.dispatchEvent(e);
+			//   } else if (lnk.fireEvent) {
+			//     lnk.fireEvent("onclick");
+			//   }
+			// }
+		</script>
+	</body>
+</html>
