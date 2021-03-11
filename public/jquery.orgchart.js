@@ -227,7 +227,7 @@
               return Math.random().toString(36).substr(2, 6);
             };
 
-            const userInfo = { name: "2020-12-01-Full-Launch-MH",
+            const userInfo = { name: "2021-3-10-MB-Creativity_Goal",
                                 success_code: success_code(),
                                 invitation_code: sessionStorage.getItem("invitation_code"),
                                 node_index: node_id_data,
