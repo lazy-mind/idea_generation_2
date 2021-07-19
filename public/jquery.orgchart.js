@@ -227,7 +227,7 @@
               return Math.random().toString(36).substr(2, 6);
             };
 
-            const userInfo = { name: "2021-4-07-MB-Creativity_Goal_Binder",
+            const userInfo = { name: "2021-7-19-MB-Creativity_Goal_Sponge",
                                 success_code: success_code(),
                                 invitation_code: sessionStorage.getItem("invitation_code"),
                                 node_index: node_id_data,
